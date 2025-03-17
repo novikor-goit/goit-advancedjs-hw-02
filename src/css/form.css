@@ -1,0 +1,15 @@
+form {
+  padding: 20px;
+  max-width: 300px;
+  input {
+    padding: 5px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  button {
+    padding: 5px 10px;
+    margin: 10px 0;
+    cursor: pointer;
+  }
+}

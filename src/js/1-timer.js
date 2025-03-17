@@ -7,19 +7,22 @@ import 'flatpickr/dist/flatpickr.min.css';
 let userSelectedDate = null;
 
 const button = document.querySelector('[data-start]');
+function switchButtonState(enabled) {
+  button.disabled = !enabled;
+}
 
 /**
  * @param {Date} selectedDate
  */
 function validateDateTime(selectedDate) {
-  if (selectedDate < new Date()) {
+  if (selectedDate.getTime() <= Date.now()) {
     iziToast.error({
       message: 'Please choose a date in the future',
     });
-    button.disabled = true;
+    switchButtonState(false);
     return;
   }
-  button.disabled = false;
+  switchButtonState(true);
   userSelectedDate = selectedDate;
 }
 
@@ -29,8 +32,7 @@ flatpickr('#datetime-picker', {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    const selectedData = selectedDates[0];
-    validateDateTime(selectedData);
+    validateDateTime(selectedDates[0]);
   },
 });
 
@@ -58,6 +60,8 @@ function renderCountdown(timeDimensions) {
 
 let intervalId = null;
 button.addEventListener('click', () => {
+  clearInterval(intervalId);
+  switchButtonState(false);
   intervalId = setInterval(() => {
     const now = new Date();
     const remainingTime = userSelectedDate ? userSelectedDate - now : 0;
@@ -66,6 +70,7 @@ button.addEventListener('click', () => {
       iziToast.success({
         message: 'Time is up!',
       });
+      switchButtonState(true);
       clearInterval(intervalId);
       return;
     }
